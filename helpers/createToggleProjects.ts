@@ -21,8 +21,6 @@ export const createTogglProjetcs = async ({
       project?.properties?.Status?.status?.id === 'in-progress',
   );
 
-  console.log('projects', projects);
-
   const prevProjects = prevNotionData?.results?.filter(
     (project) =>
       //@ts-ignore
@@ -50,16 +48,6 @@ export const createTogglProjetcs = async ({
     );
   });
 
-  console.log('differentProjects', differentProjects);
-
-  //@ts-ignore
-  console.log('togglProjects', togglProjects.data);
-  console.log(
-    'PROJECT NAME',
-    //@ts-ignore
-    projects?.[0]?.properties?.['Project name']?.title?.[0]?.plain_text,
-  );
-
   if (!differentProjects) {
     return;
   }
@@ -72,17 +60,10 @@ export const createTogglProjetcs = async ({
         database_id: databaseId,
       });
 
-      console.log('databaseId', databaseId);
-
-      //@ts-ignore
-      console.log('database', database?.parent);
-
       const workspacePage = notionData?.results?.find(
         //@ts-ignore
         (data: any) => data.id === database?.parent?.page_id,
       );
-
-      console.log('workspacePage', workspacePage);
 
       const clients = await togglHelper({
         method: 'GET',
@@ -96,8 +77,6 @@ export const createTogglProjetcs = async ({
           //@ts-ignore
           workspacePage?.properties?.title?.title?.[0]?.plain_text,
       );
-
-      console.log('client', client);
 
       await togglHelper({
         method: 'POST',

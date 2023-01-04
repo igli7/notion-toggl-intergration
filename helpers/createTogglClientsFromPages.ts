@@ -34,8 +34,6 @@ export const createTogglClientsFromPages = async ({
     endpoint: 'clients',
   });
 
-  console.log('togglClients', togglClients);
-
   const differentWorkspacePages = workspacePages?.filter((page: any) => {
     //@ts-ignore
     return !togglClients?.data?.some(
@@ -43,17 +41,6 @@ export const createTogglClientsFromPages = async ({
         !client.name === page?.properties?.title?.title?.[0]?.plain_text,
     );
   });
-
-  //@ts-ignore
-  console.log('togglClients NAME:', togglClients?.data?.[0]?.name);
-
-  console.log(
-    'differentWorkspacePages NAME:',
-    //@ts-ignore
-    differentWorkspacePages?.[0]?.properties?.title?.title?.[0]?.plain_text,
-  );
-
-  console.log('PAGES', differentWorkspacePages);
 
   if (!differentWorkspacePages) {
     return;
@@ -66,7 +53,7 @@ export const createTogglClientsFromPages = async ({
         endpoint: 'clients',
         data: {
           name: page?.properties?.title?.title?.[0]?.plain_text,
-          wid: process.env.TOGGL_WORKSPACE_ID,
+          wid: parseInt(process.env.TOGGL_WORKSPACE_ID as string),
         },
       });
     }),
