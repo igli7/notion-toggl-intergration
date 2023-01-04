@@ -1,24 +1,24 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
-import { SearchResponse } from '@notionhq/client/build/src/api-endpoints';
 import { createTogglClientsFromPages } from './helpers/createTogglClientsFromPages';
 import { createTogglProjetcs } from './helpers/createToggleProjects';
 import notion from './lib/notion';
 import { createTogglTasks } from './helpers/createToggleTasks';
+import { NotionData } from './types/NotionData';
 
 const app = express();
 
 app.get('/', async (req, res) => {
-  let prevNotionData: SearchResponse;
+  let prevNotionData: NotionData;
 
   setInterval(async () => {
-    const notionData = await notion.search({
+    const notionData = (await notion.search({
       filter: {
         property: 'object',
         value: 'page',
       },
-    });
+    })) as NotionData;
 
     if (JSON.stringify(notionData) !== JSON.stringify(prevNotionData)) {
       console.log('DIFFERENT NOTION DATA');
@@ -41,7 +41,7 @@ app.get('/', async (req, res) => {
     }
 
     prevNotionData = notionData;
-  }, 5000);
+  }, 15000);
 });
 
 const port = 8000;

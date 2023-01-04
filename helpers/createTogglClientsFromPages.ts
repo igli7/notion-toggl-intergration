@@ -1,26 +1,23 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-import { SearchResponse } from '@notionhq/client/build/src/api-endpoints';
 import { togglHelper } from './togglHelper';
+import { NotionData } from '../types/NotionData';
+import { TogglClient } from '../types/TogglClient';
 
 type ICreateClients = {
-  notionData: SearchResponse;
-  prevNotionData: SearchResponse;
+  notionData: NotionData;
+  prevNotionData: NotionData;
 };
 
 export const createTogglClientsFromPages = async ({
   notionData,
   prevNotionData,
 }: ICreateClients) => {
-  //@ts-ignore
   const workspacePages = notionData?.results?.filter(
-    //@ts-ignore
     (page) => page?.parent?.type === 'workspace',
   );
 
-  //@ts-ignore
   const prevWorkspacePages = prevNotionData?.results?.filter(
-    //@ts-ignore
     (page) => page?.parent?.type === 'workspace',
   );
 
@@ -29,13 +26,12 @@ export const createTogglClientsFromPages = async ({
     return;
   }
 
-  const togglClients = await togglHelper({
+  const togglClients = (await togglHelper({
     method: 'GET',
     endpoint: 'clients',
-  });
+  })) as TogglClient;
 
   const differentWorkspacePages = workspacePages?.filter((page: any) => {
-    //@ts-ignore
     return !togglClients?.data?.some(
       (client: any) =>
         !client.name === page?.properties?.title?.title?.[0]?.plain_text,

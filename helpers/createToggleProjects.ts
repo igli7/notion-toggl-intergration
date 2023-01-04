@@ -1,12 +1,15 @@
-import { SearchResponse } from '@notionhq/client/build/src/api-endpoints';
 import notion from '../lib/notion';
 import { togglHelper } from './togglHelper';
 //@ts-ignore
 import randomHexColor from 'random-hex-color';
+import { NotionData } from '../types/NotionData';
+import { TogglProject } from '../types/TogglProject';
+import { NotionDatabase } from '../types/NotionDatabase';
+import { TogglClient } from '../types/TogglClient';
 
 type ICreateTogglProjetcs = {
-  notionData: SearchResponse;
-  prevNotionData: SearchResponse;
+  notionData: NotionData;
+  prevNotionData: NotionData;
 };
 
 export const createTogglProjetcs = async ({
@@ -15,17 +18,13 @@ export const createTogglProjetcs = async ({
 }: ICreateTogglProjetcs) => {
   const projects = notionData?.results?.filter(
     (project) =>
-      //@ts-ignore
       'Project name' in project?.properties &&
-      //@ts-ignore
       project?.properties?.Status?.status?.id === 'in-progress',
   );
 
   const prevProjects = prevNotionData?.results?.filter(
     (project) =>
-      //@ts-ignore
       'Project name' in project?.properties &&
-      //@ts-ignore
       project?.properties?.Status?.status?.id === 'in-progress',
   );
 
@@ -34,13 +33,12 @@ export const createTogglProjetcs = async ({
     return;
   }
 
-  const togglProjects = await togglHelper({
+  const togglProjects = (await togglHelper({
     method: 'GET',
     endpoint: 'projects',
-  });
+  })) as TogglProject;
 
   const differentProjects = projects?.filter((project: any) => {
-    //@ts-ignore
     return !togglProjects?.data?.some(
       (togglProject: any) =>
         togglProject?.name ===
@@ -56,25 +54,22 @@ export const createTogglProjetcs = async ({
     differentProjects.map(async (project: any) => {
       const databaseId = project?.parent?.database_id;
 
-      const database = await notion.databases.retrieve({
+      const database = (await notion.databases.retrieve({
         database_id: databaseId,
-      });
+      })) as NotionDatabase;
 
       const workspacePage = notionData?.results?.find(
-        //@ts-ignore
-        (data: any) => data.id === database?.parent?.page_id,
+        (data) => data.id === database?.parent?.page_id,
       );
 
-      const clients = await togglHelper({
+      const clients = (await togglHelper({
         method: 'GET',
         endpoint: 'clients',
-      });
+      })) as TogglClient;
 
-      //@ts-ignore
       const client = clients?.data?.find(
-        (obj: any) =>
+        (obj) =>
           obj?.name ===
-          //@ts-ignore
           workspacePage?.properties?.title?.title?.[0]?.plain_text,
       );
 
@@ -82,7 +77,7 @@ export const createTogglProjetcs = async ({
         method: 'POST',
         endpoint: 'projects',
         data: {
-          client_id: client.id,
+          client_id: client?.id,
           name: project?.properties?.['Project name']?.title?.[0]?.plain_text,
           is_private: true,
           active: true,
@@ -94,7 +89,7 @@ export const createTogglProjetcs = async ({
           //     project?.properties?.Estimates?.select?.name,
           //   ),
           rate: null,
-          cid: client.id,
+          cid: client?.id,
         },
       });
     }),

@@ -1,12 +1,12 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
-import { SearchResponse } from '@notionhq/client/build/src/api-endpoints';
-import notion from '../lib/notion';
 import { togglHelper } from './togglHelper';
+import { NotionData } from '../types/NotionData';
+import { TogglProject } from '../types/TogglProject';
 
 type ICreateTogglTasks = {
-  notionData: SearchResponse;
-  prevNotionData: SearchResponse;
+  notionData: NotionData;
+  prevNotionData: NotionData;
 };
 
 export const createTogglTasks = async ({
@@ -15,9 +15,7 @@ export const createTogglTasks = async ({
 }: ICreateTogglTasks) => {
   const tasks = notionData?.results?.filter(
     (task) =>
-      //@ts-ignore
       'Task name' in task?.properties &&
-      //@ts-ignore
       task?.properties?.Status?.status?.id === 'in-progress',
   );
 
@@ -28,9 +26,7 @@ export const createTogglTasks = async ({
 
   const prevTasks = prevNotionData?.results?.filter(
     (task) =>
-      //@ts-ignore
       'Task name' in task?.properties &&
-      //@ts-ignore
       task?.properties?.Status?.status?.id === 'in-progress',
   );
 
@@ -45,29 +41,27 @@ export const createTogglTasks = async ({
         (data) => data?.id === task?.properties?.Project?.relation?.[0]?.id,
       );
 
-      const projects = await togglHelper({
+      const projects = (await togglHelper({
         method: 'GET',
         endpoint: 'projects',
-      });
+      })) as TogglProject;
 
-      //@ts-ignore
       const project = projects?.data?.find(
-        (obj: any) =>
+        (obj) =>
           obj?.name ===
-          //@ts-ignore
           notionProject?.properties?.['Project name']?.title?.[0]?.plain_text,
       );
 
       await togglHelper({
         method: 'POST',
-        endpoint: `projects/${project.id}/tasks`,
+        endpoint: `projects/${project?.id}/tasks`,
         data: {
           active: true,
           name: task?.properties?.['Task name']?.title?.[0]?.plain_text,
           workspace_id: parseInt(process.env.TOGGL_WORKSPACE_ID as string),
           estimated_seconds:
             parseInt(task?.properties?.Estimates?.select?.name) * 60 * 60,
-          project_id: project.id,
+          project_id: project?.id,
         },
       });
     }),
