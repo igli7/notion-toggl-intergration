@@ -20,12 +20,6 @@ app.get('/', async (req, res) => {
       },
     });
 
-    res.send(
-      `<script>
-          console.log("All pages",${JSON.stringify(notionData, null, 2)})
-      </script>`,
-    );
-
     if (JSON.stringify(notionData) !== JSON.stringify(prevNotionData)) {
       console.log('DIFFERENT NOTION DATA');
       await createTogglClientsFromPages({
