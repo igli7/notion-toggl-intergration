@@ -3,15 +3,15 @@ import notion from '../lib/notion';
 import { NotionData } from '../types/NotionData';
 dotenv.config();
 
-type IUpdateTogglTasks = {
+type IUpdateNotionTasks = {
   notionData: NotionData;
   prevNotionData: NotionData;
 };
 
-export const updateTogglTasks = async ({
+export const updateNotionTasks = async ({
   notionData,
   prevNotionData,
-}: IUpdateTogglTasks) => {
+}: IUpdateNotionTasks) => {
   const tasksWithNoId = notionData?.results?.filter(
     (task) =>
       'Task name' in task?.properties &&

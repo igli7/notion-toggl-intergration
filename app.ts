@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
 import express from 'express';
 import { createTogglClientsFromPages } from './helpers/createTogglClientsFromPages';
-import { createTogglProjetcs } from './helpers/createToggleProjects';
-import { createTogglTasks } from './helpers/createToggleTasks';
-import { updateTogglTasks } from './helpers/updateToggleTaskIds';
+import { createTogglProjetcs } from './helpers/createTogglProjetcs';
+import { createTogglTasks } from './helpers/createTogglTasks';
+import { updateNotionTasks } from './helpers/updateNotionTaskIds';
 import notion from './lib/notion';
 import { NotionData } from './types/NotionData';
 dotenv.config();
@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
       // );
 
       if (JSON.stringify(notionData) !== JSON.stringify(prevNotionData)) {
-        await updateTogglTasks({
+        await updateNotionTasks({
           notionData,
           prevNotionData,
         });
@@ -59,7 +59,7 @@ app.get('/', async (req, res) => {
       console.log('ERROR NOTION', error);
       console.error(error);
     }
-  }, 10000);
+  }, 60000);
 });
 
 const port = 8000;
