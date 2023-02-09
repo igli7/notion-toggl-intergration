@@ -1,6 +1,6 @@
+import axios, { AxiosError } from 'axios';
 import * as dotenv from 'dotenv';
 dotenv.config();
-import axios from 'axios';
 
 const baseUrl = `https://api.track.toggl.com/api/v9/workspaces/${process.env.TOGGL_WORKSPACE_ID}`;
 
@@ -27,7 +27,9 @@ export const togglHelper = async ({ method, endpoint, data }: ITogglHelper) => {
     });
 
     return res;
-  } catch (error) {
+  } catch (err) {
+    const error = err as AxiosError<Error>;
+    console.error('ERROR with toggl:', error.response?.data);
     return {
       error: error,
     };

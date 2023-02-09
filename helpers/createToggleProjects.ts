@@ -3,9 +3,9 @@ import { togglHelper } from './togglHelper';
 //@ts-ignore
 import randomHexColor from 'random-hex-color';
 import { NotionData } from '../types/NotionData';
-import { TogglProject } from '../types/TogglProject';
 import { NotionDatabase } from '../types/NotionDatabase';
 import { TogglClient } from '../types/TogglClient';
+import { TogglProject } from '../types/TogglProject';
 
 type ICreateTogglProjetcs = {
   notionData: NotionData;
@@ -49,6 +49,8 @@ export const createTogglProjetcs = async ({
   if (!differentProjects) {
     return;
   }
+
+  console.log('differentProjects', differentProjects);
 
   await Promise.all(
     differentProjects.map(async (project: any) => {

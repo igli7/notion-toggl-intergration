@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
-import { togglHelper } from './togglHelper';
 import { NotionData } from '../types/NotionData';
 import { TogglProject } from '../types/TogglProject';
+import { togglHelper } from './togglHelper';
+dotenv.config();
 
 type ICreateTogglTasks = {
   notionData: NotionData;
@@ -57,7 +57,7 @@ export const createTogglTasks = async ({
         endpoint: `projects/${project?.id}/tasks`,
         data: {
           active: true,
-          name: task?.properties?.['Task name']?.title?.[0]?.plain_text,
+          name: `${task?.properties?.Id?.number} - ${task?.properties?.['Task name']?.title?.[0]?.plain_text}`,
           workspace_id: parseInt(process.env.TOGGL_WORKSPACE_ID as string),
           estimated_seconds:
             parseInt(task?.properties?.Estimates?.select?.name) * 60 * 60,

@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
-dotenv.config();
-import { togglHelper } from './togglHelper';
 import { NotionData } from '../types/NotionData';
 import { TogglClient } from '../types/TogglClient';
+import { togglHelper } from './togglHelper';
+dotenv.config();
 
 type ICreateClients = {
   notionData: NotionData;
