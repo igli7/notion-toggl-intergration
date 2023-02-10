@@ -13,8 +13,9 @@ const app = express();
 app.get('/', async (req, res) => {
   let prevNotionData: NotionData;
 
-  setInterval(async () => {
+  const main = async () => {
     try {
+      console.log("I'M HERE", new Date());
       const notionData = (await notion.search({
         filter: {
           property: 'object',
@@ -59,7 +60,11 @@ app.get('/', async (req, res) => {
       console.log('ERROR NOTION', error);
       console.error(error);
     }
-  }, 60000);
+
+    setTimeout(main, 60000);
+  };
+
+  main();
 });
 
 const port = 8000;

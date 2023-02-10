@@ -59,8 +59,9 @@ export const createTogglTasks = async ({
           active: true,
           name: `${task?.properties?.Id?.number} - ${task?.properties?.['Task name']?.title?.[0]?.plain_text}`,
           workspace_id: parseInt(process.env.TOGGL_WORKSPACE_ID as string),
-          estimated_seconds:
-            parseInt(task?.properties?.Estimates?.select?.name) * 60 * 60,
+          estimated_seconds: task?.properties?.Estimates?.select?.name
+            ? parseInt(task?.properties?.Estimates?.select?.name) * 60 * 60
+            : 0,
           project_id: project?.id,
         },
       });
