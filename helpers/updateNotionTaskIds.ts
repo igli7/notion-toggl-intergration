@@ -16,7 +16,9 @@ export const updateNotionTasks = async ({
     (task) =>
       'Task name' in task?.properties &&
       //@ts-ignore
-      task?.properties?.Id?.number === null,
+      task?.properties?.Id?.number === null &&
+      //@ts-ignore
+      task?.properties?.Project?.relation.length !== 0,
   );
 
   const tasksIds = notionData?.results
