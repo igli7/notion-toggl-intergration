@@ -34,8 +34,8 @@ export interface LastEditedBy {
 
 export interface Icon {
   type: string;
-  external?: External;
   emoji?: string;
+  external?: External;
 }
 
 export interface External {
@@ -45,11 +45,14 @@ export interface External {
 export interface Parent {
   type: string;
   database_id?: string;
-  page_id?: string;
   workspace?: boolean;
 }
 
 export interface Properties {
+  'Date Completed'?: DateCompleted;
+  Id?: Id;
+  'Last edited time'?: LastEditedTime;
+  'Long id'?: LongId;
   'Task name'?: TaskName;
   Assign?: Assign;
   Status?: Status;
@@ -63,6 +66,46 @@ export interface Properties {
   Dates?: Dates;
   Tasks?: Tasks;
   title?: Title3;
+}
+
+export interface DateCompleted {
+  id: string;
+  type: string;
+  formula: Formula;
+}
+
+export interface Formula {
+  type: string;
+  date?: Date;
+}
+
+export interface Date {
+  start: string;
+  end: any;
+  time_zone: any;
+}
+
+export interface Id {
+  id: string;
+  type: string;
+  number?: number;
+}
+
+export interface LastEditedTime {
+  id: string;
+  type: string;
+  last_edited_time: string;
+}
+
+export interface LongId {
+  id: string;
+  type: string;
+  formula: Formula2;
+}
+
+export interface Formula2 {
+  type: string;
+  string: string;
 }
 
 export interface TaskName {
@@ -127,10 +170,10 @@ export interface Status2 {
 export interface Due {
   id: string;
   type: string;
-  date?: Date;
+  date?: Date2;
 }
 
-export interface Date {
+export interface Date2 {
   start: string;
   end: any;
   time_zone: any;
@@ -220,12 +263,12 @@ export interface Rollup {
 export interface Dates {
   id: string;
   type: string;
-  date?: Date2;
+  date?: Date3;
 }
 
-export interface Date2 {
+export interface Date3 {
   start: string;
-  end: string;
+  end?: string;
   time_zone: any;
 }
 

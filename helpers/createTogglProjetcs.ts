@@ -61,7 +61,7 @@ export const createTogglProjetcs = async ({
       })) as NotionDatabase;
 
       const workspacePage = notionData?.results?.find(
-        (data) => data.id === database?.parent?.page_id,
+        (data) => data.id === database?.parent?.database_id,
       );
 
       const clients = (await togglHelper({

@@ -29,6 +29,7 @@ export const updateNotionTasks = async ({
     //@ts-ignore
     .map((tk) => tk?.properties?.Id?.number);
 
+  //@ts-ignore
   tasksIds.sort((a, b) => b - a);
 
   if (!tasksWithNoId) {
@@ -54,6 +55,7 @@ export const updateNotionTasks = async ({
         page_id: task.id,
         properties: {
           Id: {
+            //@ts-ignore
             number: tasksIds.length === 0 ? 100 + i : tasksIds[0] + i + 1,
           },
         },
