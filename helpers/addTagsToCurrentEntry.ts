@@ -16,7 +16,7 @@ export const addTagsToCurrentEntry = async ({
   notionData,
   togglCurrentEntryData,
 }: IAddTagsToCurrentEntry) => {
-  if (togglCurrentEntryData.tags.length > 0) {
+  if (togglCurrentEntryData?.tags?.length > 0) {
     console.log('Tags already exist');
     return;
   }
