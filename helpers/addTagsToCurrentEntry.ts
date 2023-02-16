@@ -31,7 +31,7 @@ export const addTagsToCurrentEntry = async ({
   const notionTask = notionData.results.find(
     (notion) =>
       notion?.properties?.['Task name']?.title?.[0]?.plain_text ===
-      togglTaskData.name.slice(6),
+      togglTaskData?.name.slice(6),
   );
 
   if (!notionTask?.properties?.Tags?.multi_select[0]?.name) {

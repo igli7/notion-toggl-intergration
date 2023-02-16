@@ -34,7 +34,7 @@ export const createTogglClientsFromPages = async ({
   const differentWorkspacePages = workspacePages?.filter((page: any) => {
     return !togglClients?.data?.some(
       (client: any) =>
-        !client.name === page?.properties?.title?.title?.[0]?.plain_text,
+        !client?.name === page?.properties?.title?.title?.[0]?.plain_text,
     );
   });
 
