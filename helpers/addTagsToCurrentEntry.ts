@@ -23,7 +23,7 @@ export const addTagsToCurrentEntry = async ({
 
   const togglTask = (await togglHelper({
     method: 'GET',
-    endpoint: `projects/${togglCurrentEntryData.project_id}/tasks/${togglCurrentEntryData.task_id}`,
+    endpoint: `projects/${togglCurrentEntryData?.project_id}/tasks/${togglCurrentEntryData?.task_id}`,
   })) as AxiosResponse<any, any>;
 
   const togglTaskData = togglTask.data as TogglTask;
