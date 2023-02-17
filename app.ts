@@ -96,7 +96,7 @@ app.get('/', async (req, res) => {
       }
     }
 
-    setTimeout(main, 10000);
+    setTimeout(main, 60000);
   };
 
   main();
