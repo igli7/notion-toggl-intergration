@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import * as dotenv from 'dotenv';
 import togglAuthHeader from '../utils/togglAuthHeader';
 dotenv.config();
@@ -12,22 +12,14 @@ type ITogglHelper = {
 };
 
 export const togglHelper = async ({ method, endpoint, data }: ITogglHelper) => {
-  try {
-    const res = await axios(`${baseUrl}/${endpoint}`, {
-      method,
-      data,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: togglAuthHeader,
-      },
-    });
+  const res = await axios(`${baseUrl}/${endpoint}`, {
+    method,
+    data,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: togglAuthHeader,
+    },
+  });
 
-    return res;
-  } catch (err) {
-    const error = err as AxiosError<Error>;
-    console.error('ERROR with toggl:', error.response?.data);
-    return {
-      error: error,
-    };
-  }
+  return res;
 };

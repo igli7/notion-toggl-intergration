@@ -1,8 +1,8 @@
 export interface TogglClient {
-  data: [Data];
+  data: [TogglClientData];
 }
 
-export interface Data {
+export interface TogglClientData {
   id: number;
   wid: number;
   archived: boolean;

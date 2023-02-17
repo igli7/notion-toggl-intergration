@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import * as dotenv from 'dotenv';
 import notion from '../lib/notion';
 import { NotionData } from '../types/NotionData';
@@ -51,15 +52,21 @@ export const updateNotionTasks = async ({
 
   await Promise.all(
     tasksWithNoId.map(async (task, i) => {
-      await notion.pages.update({
-        page_id: task.id,
-        properties: {
-          Id: {
-            //@ts-ignore
-            number: tasksIds.length === 0 ? 100 + i : tasksIds[0] + i + 1,
+      try {
+        await notion.pages.update({
+          page_id: task.id,
+          properties: {
+            Id: {
+              //@ts-ignore
+              number: tasksIds.length === 0 ? 100 + i : tasksIds[0] + i + 1,
+            },
           },
-        },
-      });
+        });
+        console.log('SUCCESSFULLY UPDATED NOTION TASK ID');
+      } catch (err) {
+        const error = err as AxiosError<Error>;
+        console.error('ERROR UPDATING TOGGL TASK', error.response?.data);
+      }
     }),
   );
 };

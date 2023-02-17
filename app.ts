@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import * as dotenv from 'dotenv';
 import express from 'express';
 import { addTagsToCurrentEntry } from './helpers/addTagsToCurrentEntry';
@@ -66,31 +66,37 @@ app.get('/', async (req, res) => {
         });
 
         console.log('DIFFERENT NOTION DATA');
-        await createTogglClientsFromPages({
+        const togglClients = await createTogglClientsFromPages({
           notionData,
           prevNotionData,
         });
 
-        await createTogglProjetcs({
+        const togglProjects = await createTogglProjetcs({
           notionData,
           prevNotionData,
+          togglClients,
         });
 
         await createTogglTasks({
           notionData,
           prevNotionData,
+          togglProjects,
         });
       } else {
         console.log('SAME NOTION DATA');
       }
 
       prevNotionData = notionData;
-    } catch (error) {
-      console.log('ERROR NOTION', error);
-      console.error(error);
+    } catch (err) {
+      const error = err as AxiosError<Error>;
+      if (error.response?.data) {
+        console.error('ERROR NOTION', error.response?.data);
+      } else {
+        console.error('ERROR NOTION', err);
+      }
     }
 
-    setTimeout(main, 60000);
+    setTimeout(main, 10000);
   };
 
   main();

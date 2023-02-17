@@ -1,8 +1,8 @@
 export interface TogglProject {
-  data: [Data];
+  data: [TogglProjectData];
 }
 
-export interface Data {
+export interface TogglProjectData {
   id: number;
   workspace_id: number;
   client_id: number;

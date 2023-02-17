@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import * as dotenv from 'dotenv';
 import { NotionData } from '../types/NotionData';
 import { TogglCurrentEntry } from '../types/TogglCurrentEntry';
@@ -20,13 +20,19 @@ export const addTagsToCurrentEntry = async ({
     console.log('Tags already exist');
     return;
   }
+  let togglTask: AxiosResponse<any, any> | undefined;
 
-  const togglTask = (await togglHelper({
-    method: 'GET',
-    endpoint: `projects/${togglCurrentEntryData?.project_id}/tasks/${togglCurrentEntryData?.task_id}`,
-  })) as AxiosResponse<any, any>;
+  try {
+    togglTask = (await togglHelper({
+      method: 'GET',
+      endpoint: `projects/${togglCurrentEntryData?.project_id}/tasks/${togglCurrentEntryData?.task_id}`,
+    })) as AxiosResponse<any, any>;
+  } catch (err) {
+    const error = err as AxiosError<Error>;
+    console.error('ERROR TRYING TO GET TOGGL TASK', error.response?.data);
+  }
 
-  const togglTaskData = togglTask.data as TogglTask;
+  const togglTaskData = togglTask?.data as TogglTask;
 
   const notionTask = notionData.results.find(
     (notion) =>
@@ -39,7 +45,7 @@ export const addTagsToCurrentEntry = async ({
   }
 
   try {
-    const res = await axios.put(
+    await axios.put(
       `https://api.track.toggl.com/api/v9/workspaces/${process.env.TOGGL_WORKSPACE_ID}/time_entries/${togglCurrentEntryData.id}`,
       {
         tags: [`${notionTask?.properties?.Tags?.multi_select[0]?.name}`],
@@ -51,7 +57,11 @@ export const addTagsToCurrentEntry = async ({
         },
       },
     );
-  } catch (error) {
-    console.error('SOMETHING WENT WRONG WITH ADDING TAGS', error);
+  } catch (err) {
+    const error = err as AxiosError<Error>;
+    console.error(
+      'ERROR TRYING TO GET ADD TAGS TO ENTRY TASK',
+      error.response?.data,
+    );
   }
 };
