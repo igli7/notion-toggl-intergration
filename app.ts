@@ -17,7 +17,7 @@ const app = express();
 app.get('/', async (req, res) => {
   let prevNotionData: NotionData;
   let prevTogglCurrentEntry: TogglCurrentEntry;
-
+  //
   const main = async () => {
     try {
       const notionData = (await notion.search({
